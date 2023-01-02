@@ -1,13 +1,15 @@
-import {Email} from "@/types";
-
-export type UserInfo={
-    name:string
-    nickName:string
+import {Email, RoleInfo} from "@/types";
+export interface User{
+    id:number
+    username:string
+    nickname:string
     age:number
+    avatar?:string
     email:Email
-    token?:string
-    address:string
+}
+export interface UserInfo extends User{
+    roles:RoleInfo[]
 }
 export type LoginParam={
     password:string
-} & Pick<UserInfo, 'name'>
+} & Pick<User, 'username'>

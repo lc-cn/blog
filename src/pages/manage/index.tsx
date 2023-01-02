@@ -1,1 +1,0 @@
-export default ()=><div>manage page</div>

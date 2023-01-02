@@ -1,7 +1,8 @@
 import axios,{AxiosRequestConfig, AxiosResponse} from "axios";
 import globalConfig from '@/config'
 import {RequestMap} from "@/types";
-import {message} from "antd";
+import {ElMessage} from "element-plus";
+import {getToken} from "@/utils/auth";
 const instance = axios.create({
     // 基础路径
     baseURL: globalConfig.baseURL,
@@ -18,13 +19,17 @@ type Response<T = any> = {
     message?:string
 }
 const request=(<T> (config: AxiosRequestConfig) => {
+    config.headers={
+        'Authorization': 'Bearer ' + getToken(globalConfig.tokenKey),
+        ...(config.headers||{})
+    }
     return new Promise<Response<T>>((resolve, reject) => {
         instance.request<Response<T>>(config).then((response: AxiosResponse<Response<T>>) => {
             const {data:res}=response
             if(res.code===200){
                 resolve(res)
             }else{
-                message.error(res.message)
+                ElMessage.error(res.message)
                 reject()
             }
         }).catch((error :any) => {

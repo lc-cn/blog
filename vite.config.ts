@@ -1,7 +1,6 @@
 import {defineConfig} from 'vite'
 import * as path from 'node:path'
-import {viteMockServe} from 'vite-plugin-mock'
-import react from '@vitejs/plugin-react'
+import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
     server: {
@@ -9,23 +8,12 @@ export default defineConfig({
         proxy: {
             '/api':{
                 changeOrigin:true,
-                target:'http://localhost:8089',
+                target:'http://localhost:8080',
             }
         }
     },
     plugins: [
-        react(),
-        viteMockServe({
-            mockPath: 'mock',
-            localEnabled: true,
-            prodEnabled: false,
-            supportTs: false,
-            watchFiles: true,
-            injectCode: `
-        import {setupProdMockServer} from './mockProdServer';
-        setupProdMockServer();
-      `
-        })
+        vue(),
     ],
     resolve: {
         alias: {
@@ -36,7 +24,7 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             less: {
-                additionalData: `@import "${path.resolve(__dirname, "src/styles/variable.less")}";`,
+                additionalData: `@import "${path.resolve(__dirname, "src/styles/variable.scss")}";`,
                 javascriptEnabled: true
             }
         }

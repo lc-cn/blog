@@ -6,7 +6,6 @@ declare global {
 const config:GlobalConfig={
     tokenKey: "LC-BLOG",
     baseURL:'/api',
-    layout:'default'
 }
 if(window.runtimeConfig){
     Object.assign(config,window.runtimeConfig)
