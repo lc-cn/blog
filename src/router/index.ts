@@ -14,12 +14,12 @@ export const constantRouters = [
 ]
 
 const files = import.meta.glob('@/pages/**/*.vue')
-export function menusToRoutes(menus: Menu[],pid:number|null=null): RouteRecordRaw[] {
+export function menusToRoutes(menus: Menu[],pid:number|null=null,level=1): RouteRecordRaw[] {
     const routes:RouteRecordRaw[]=[];
     menus.filter((menu)=>menu.pId===pid)
         .forEach(({path,component,id,...meta}) => {
         const realPath = `/src/${component}.vue`
-        if (files[realPath]) {
+        if (files[realPath] && level===1) {
             routes.push({
                 path,
                 meta:{
@@ -27,14 +27,18 @@ export function menusToRoutes(menus: Menu[],pid:number|null=null): RouteRecordRa
                     ...meta,
                 },
                 component: files[realPath],
-                children:menusToRoutes(menus.filter(menu=>menu.id!==pid),id)
+                children:menusToRoutes(menus.filter(menu=>menu.id!==pid),id,level+1)
             })
+        }else if (level!==1){
+            routes.push({
+                path,
+                meta:{
+                    id,
+                    ...meta,
+                },
+                component: files[realPath],
+            },...menusToRoutes(menus.filter(menu=>menu.id!==pid),id,level+1))
         }
-    })
-    routes.push({
-        path: '/:catchAll(.*)*',
-        name: '页面不存在',
-        component: () => import('@/pages/404.vue')
     })
     return routes
 }

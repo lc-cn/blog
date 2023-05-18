@@ -6,16 +6,25 @@ import {usePermissionStore} from "@/store/permission";
 import {ElMessage} from "element-plus";
 import {request} from "@/utils";
 import {LoginParam, RoleInfo, User, UserInfo} from "@/types";
-import {useSystemStore} from "@/store/system";
 export const useUserStore =defineStore('user', {
     state(){
         return {
             token: getToken(config.tokenKey),
             info:undefined,
+            users:{
+                list:[],
+                pageNum:1,
+                total:0
+            },
             roles: [],
         } as {
             token:string,
             info?:User,
+            users:{
+                list:User[],
+                pageNum:number
+                total:number
+            }
             roles:RoleInfo[]
         }
     },
@@ -47,6 +56,15 @@ export const useUserStore =defineStore('user', {
             await permissionStore.generateRoutes(roles)
 
         },
+        getUserInfo({id}:Pick<User, 'id'>){
+          return new Promise<UserInfo&{roles:RoleInfo[]}>((resolve)=>{
+              request.get('/user/info',{id}).then(res=>{
+                  if(res.code===200){
+                      resolve(res.data)
+                  }
+              })
+          })
+        },
         // get user info
         getInfo(force?:boolean) {
             const info=JSON.parse(localStorage.getItem(config.tokenKey+':userInfo')||'null')
@@ -74,6 +92,7 @@ export const useUserStore =defineStore('user', {
         cleanInfo(){
             localStorage.removeItem(config.tokenKey+':userInfo')
             localStorage.removeItem(config.tokenKey+':roles')
+            localStorage.removeItem(config.tokenKey+':menus')
             localStorage.removeItem(config.tokenKey+':configList')
             localStorage.removeItem(config.tokenKey+':categories')
             this.token=''
@@ -83,7 +102,7 @@ export const useUserStore =defineStore('user', {
         },
         // user logout
         logout() {
-            return new Promise<void>((resolve, reject) => {
+            return new Promise<void>((resolve) => {
                 this.cleanInfo()
                 const path=router.currentRoute.value.path
                 router.push({
@@ -102,6 +121,26 @@ export const useUserStore =defineStore('user', {
                 resolve()
             })
         },
-
+        async getList(pageNum=1,pageSize=10,force?:boolean){
+            if(!force && this.users.list.length){
+                return Promise.resolve(this.users)
+            }
+            const res=await request.get('/user/list',{pageNum,pageSize})
+            if(res.code===200){
+                this.users={
+                    list:res.data.list,
+                    pageNum:res.data.pageNum,
+                    total:res.data.total
+                }
+                localStorage.setItem(config.tokenKey+':users',JSON.stringify(res.data))
+            }
+            return this.users
+        },
+        async addUser(params:Partial<Omit<User, 'id'>>){
+            return request.post('/user/add',params)
+        },
+        async updateUser({id,...params}:Partial<User>){
+            return request.post('/user/update',params,{params:{id}})
+        },
     }
 })

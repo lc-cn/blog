@@ -25,7 +25,7 @@ import {useMenuStore} from "@/store";
 import {onMounted} from "vue";
 const menuStore=useMenuStore()
 onMounted(()=>{
-  menuStore.init()
+  menuStore.init(2)
 })
 </script>
 <style lang="scss">

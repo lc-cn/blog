@@ -6,6 +6,7 @@ import App from './App.vue'
 import router from './router'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
+import directives from "@/directives";
 import './styles/index.scss'
 const pinia = createPinia()
 import './permission'
@@ -14,6 +15,7 @@ for (const [key, component] of Object.entries(ElementIcons)) {
     app.component(key, component)
 }
 app.use(pinia)
+    .use(directives)
     .use(router)
     .use(ElementPlus, {
         locale: zhCn,

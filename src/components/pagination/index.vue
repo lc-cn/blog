@@ -10,26 +10,33 @@
   ></el-pagination>
 </template>
 
-<script>
+<script lang="ts" setup>
 import {usePagination} from "./composition";
-
-export default {
-  emits:['change'],
-  setup(_,{emit,expose}){
-    const {pagination,setPageSize,setPageNum,setTotal} = usePagination({
-      onPageChange:(pageNum)=>{
-        emit('change',pageNum,pagination.pageSize)
-      }
-    })
-    expose({pagination,setPageNum,setPageSize,setTotal})
-    return {
-      pagination,
-      setPageNum,
-      setPageSize,
-      setTotal
-    }
+const props=withDefaults(defineProps<{
+  total?:number
+  pageSize?:number
+  pageNum?:number
+}>(),{
+  total:0,
+  pageSize:20,
+  pageNum:1
+})
+const emit=defineEmits<{
+  (e:'change', pageNum:number, pageSize:number):void
+}>()
+const {pagination,setPageSize,setPageNum,setTotal} = usePagination({
+  total:props.total,
+  pageSize:props.pageSize,
+  pageNum:props.pageNum,
+  onPageChange:(pageNum)=>{
+    emit('change',pageNum,pagination.value.pageSize)
   }
-}
+})
+defineExpose({
+  setTotal,
+  setPageNum,
+  setPageSize
+})
 </script>
 
 <style scoped>

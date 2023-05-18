@@ -8,7 +8,7 @@
         <el-input v-model="loginForm.username"/>
       </el-form-item>
       <el-form-item label="密码" prop="password" :rules="{required:true,message:'请输入密码'}">
-        <el-input v-model="loginForm.password"/>
+        <el-input type="password" v-model="loginForm.password"/>
       </el-form-item>
       <el-form-item prop="remember">
         <el-checkbox v-model="loginForm.remember">记住密码</el-checkbox>
@@ -24,7 +24,7 @@
 import {ref} from 'vue'
 import {LoginParam} from '@/types'
 import config from '@/config'
-import {useUserStore} from "@/store";
+import {useUserStore,useMenuStore} from "@/store";
 import {ElMessage} from "element-plus";
 import router from "@/router";
 
@@ -46,7 +46,9 @@ const submit=async ()=>{
     sessionStorage.setItem(config.tokenKey+':username',loginForm.value.username)
     sessionStorage.setItem(config.tokenKey+':password',loginForm.value.password)
   }
-  await router.push('/')
+  const {redirect='/'}=router.currentRoute.value.query
+  useMenuStore().init()
+  await router.push(redirect as string)
 }
 </script>
 
