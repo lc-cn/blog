@@ -3,7 +3,7 @@
     <div class="control-bar">
       <el-button type="success" plain @click="toModify({},'add')">新增</el-button>
     </div>
-    <el-table :data="userStore.users.list">
+    <el-table :data="dataList">
       <el-table-column prop="id" label="ID"/>
       <el-table-column show-overflow-tooltip="" prop="username" label="用户名"/>
       <el-table-column show-overflow-tooltip="" prop="nickname" label="昵称"/>

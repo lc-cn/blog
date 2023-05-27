@@ -1,6 +1,9 @@
 <template>
   <el-table ref="apiTable" :data="apiList" v-bind="tableProps">
     <el-table-column type="selection" v-if="multiple"/>
+    <el-table-column prop="name" label="接口名称"/>
+    <el-table-column prop="group" label="接口分组"/>
+    <el-table-column prop="tags" label="标签"/>
     <el-table-column prop="url" label="请求地址"/>
     <el-table-column prop="methods" label="请求方式"/>
     <template #append>

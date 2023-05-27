@@ -1,9 +1,8 @@
-import {Api, Role, Tree} from '@/types'
+import {Article, Tree} from '@/types'
 export interface Category{
     id:number
     pId?:number|null
     name:string
-    apis?:Api[]
-    roles?:Role[]
+    articles?:Article[]
 }
 export type CategoryTree=Tree<Category>

@@ -5,11 +5,13 @@
     </div>
     <el-table :data="dataList" row-key="id">
       <el-table-column prop="id" label="ID"/>
-      <el-table-column show-overflow-tooltip="" prop="name" label="标签名称"/>
+      <el-table-column show-overflow-tooltip="" prop="title" label="文章标题"/>
+      <el-table-column show-overflow-tooltip="" prop="content" label="文章正文"/>
       <el-table-column align="center" label="操作" fixed="right">
         <template #default="{row}">
+          <el-link :href="`/article/${row.id}`" :underline="false" type="success">查看</el-link>
           <el-button type="primary" link @click="editArticle(row)">编辑</el-button>
-          <el-popconfirm :title="`确认删除标签${row.name}?`" @confirm="deleteArticle(row)">
+          <el-popconfirm :title="`确认删除文章${row.name}?`" @confirm="deleteArticle(row)">
             <template #reference>
               <el-button type="danger" link>删除</el-button>
             </template>
@@ -35,8 +37,8 @@ const dataList=ref<Article[]>([])
 const articleStore=useArticleStore()
 const paginationDom=ref()
 const addArticle=()=>{
-  ElMessageBox.prompt('请输入标签名',{
-    inputPlaceholder:'标签名'
+  ElMessageBox.prompt('请输入文章名',{
+    inputPlaceholder:'文章名'
   }).then((input)=>{
     if(input.value && input.action==='confirm'){
       request.post('/article/add',{title:input.value}).then(res=>{
@@ -49,8 +51,8 @@ const addArticle=()=>{
   })
 }
 const editArticle=(row)=>{
-  ElMessageBox.prompt('请输入标签名',{
-    inputPlaceholder:'标签名',
+  ElMessageBox.prompt('请输入文章名',{
+    inputPlaceholder:'文章名',
     inputValue:row.name
   }).then((input)=>{
     if(input.value && input.action==='confirm'){

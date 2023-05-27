@@ -44,7 +44,7 @@
           <el-input placeholder="请输入组件路径" v-model="menuForm.component" :disabled="isReadonly"></el-input>
         </el-form-item>
       </el-row>
-      <el-affix offset="20" position="bottom">
+      <el-affix :offset="20" position="bottom">
         <el-form-item>
           <el-button type="primary" @click="submit">保存</el-button>
           <el-button @click="router.back()">返回</el-button>

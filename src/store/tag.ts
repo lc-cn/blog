@@ -10,6 +10,9 @@ export const useTagStore=defineStore('tag', {
         async updateTag({id,...params}:Partial<Tag>){
             return request.post('/tag/update',params,{params:{id}})
         },
+        getTagWithArticles(params:Pick<Tag, 'id'>){
+return request.get('/tag/articles',params)
+        },
         getTagInfo(params:Pick<Tag, 'id'>){
             return request.get('/tag/info',params)
         },

@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {RouteRecordRaw} from "vue-router";
 import router, {menusToRoutes} from "@/router";
-import {Menu, RoleInfo} from "@/types";
+import {Menu, Role} from "@/types";
 import {distinctList} from "@/utils";
 
 export const usePermissionStore=defineStore('permission', {
@@ -22,7 +22,7 @@ export const usePermissionStore=defineStore('permission', {
         }
     },
     actions: {
-        generateRoutes(roles:RoleInfo[]) {
+        generateRoutes(roles:Role[]) {
             return new Promise(resolve => {
                 const permissions=distinctList(roles.map(role=>role.menus||[]).flat(),'id')
                 this.permissions=permissions

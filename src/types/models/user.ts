@@ -1,4 +1,4 @@
-import {Email, RoleInfo} from "@/types";
+import {Email, Role} from "@/types";
 export interface User{
     id:number
     username:string
@@ -9,7 +9,7 @@ export interface User{
     email:Email
 }
 export interface UserInfo extends User{
-    roles:RoleInfo[]
+    roles:Role[]
 }
 export type LoginParam={
     password:string

@@ -1,20 +1,10 @@
 <template>
   <div class="p-menu-modify">
     <p>{{ title }}</p>
-    <el-form inline label-width="80" label-position="top" :model="menuForm">
+    <el-form inline label-width="80" label-position="top" :model="linkForm">
       <el-row>
-        <el-form-item prop="username" label="用户名">
-          <el-input placeholder="请输入用户名称" v-model="menuForm.username" :disabled="isReadonly"></el-input>
-        </el-form-item>
-      </el-row>
-      <el-row>
-        <el-form-item prop="nickname" label="昵称">
-          <el-input placeholder="请输入用户名称" v-model="menuForm.nickname" :disabled="isReadonly"></el-input>
-        </el-form-item>
-      </el-row>
-      <el-row>
-        <el-form-item prop="type" label="头像">
-          <el-input placeholder="请上传头像" v-model="menuForm.avatar" :disabled="isReadonly">
+        <el-form-item prop="icon" label="图标">
+          <el-input placeholder="请上传图标" v-model="linkForm.icon" :disabled="isReadonly">
             <template #append>
               <el-upload :show-file-list="false">
                 <template #trigger>
@@ -26,18 +16,18 @@
         </el-form-item>
       </el-row>
       <el-row>
-        <el-form-item prop="path" label="邮箱">
-          <el-input placeholder="请输入邮箱" type="email" v-model="menuForm.email" :disabled="isReadonly"></el-input>
+        <el-form-item prop="name" label="名称">
+          <el-input placeholder="请输入名称" v-model="linkForm.name" :disabled="isReadonly"/>
         </el-form-item>
       </el-row>
       <el-row>
-        <el-form-item prop="sort" label="年龄">
-          <el-input placeholder="请输入年龄" v-model.number="menuForm.age" :disabled="isReadonly"></el-input>
+        <el-form-item prop="desc" label="描述">
+          <el-input placeholder="请输入描述" v-model="linkForm.desc" :disabled="isReadonly"/>
         </el-form-item>
       </el-row>
       <el-row>
-        <el-form-item prop="component" label="密码">
-          <el-input placeholder="请输入密码" v-model="menuForm.password" :disabled="isReadonly"></el-input>
+        <el-form-item prop="url" label="地址">
+          <el-input placeholder="请输入地址" v-model="linkForm.url" :disabled="isReadonly"/>
         </el-form-item>
       </el-row>
       <el-affix :offset="20" position="bottom">
@@ -53,27 +43,27 @@
 <script lang="ts" setup>
 import {ref, onMounted, computed} from "vue";
 import {useRoute} from "vue-router";
-import {useUserStore} from "@/store";
-import {User} from "@/types";
+import {useLinkStore} from "@/store";
+import {Link} from "@/types";
 import router from "@/router";
 import {ElMessage} from "element-plus";
 
 const id = computed(() => Number(useRoute().query.id))
 const type = computed(() => useRoute().query.type)
-const title = computed(() => type.value === 'info' ? '用户详情' : id.value ? '修改用户资料' : '添加用户')
+const title = computed(() => type.value === 'info' ? '友链详情' : id.value ? '修改友链' : '添加友链')
 const isReadonly = computed(() => type.value === 'info')
-const menuForm = ref<Partial<User>>({
+const linkForm = ref<Partial<Link>>({
 })
 const submit = () => {
   if (id.value) {
-    useUserStore().updateUser(menuForm.value).then(res => {
+    useLinkStore().updateLink(linkForm.value).then(res => {
       if (res.code === 200) {
         ElMessage.success('修改成功')
         router.back()
       }
     })
   } else {
-    useUserStore().addUser(menuForm.value).then(res => {
+    useLinkStore().addLink(linkForm.value).then(res => {
       if (res.code === 200) {
         ElMessage.success('添加成功')
         router.back()
@@ -83,7 +73,9 @@ const submit = () => {
 }
 onMounted(async () => {
   if (id.value) {
-    menuForm.value = await useUserStore().getUserInfo({id: id.value})
+    const {data,code} = await useLinkStore().getLinkInfo({id: id.value})
+    if(code!==200) return
+    linkForm.value =  data
   }
 })
 </script>

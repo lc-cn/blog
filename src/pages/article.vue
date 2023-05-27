@@ -1,6 +1,6 @@
 <template>
   <div class="p-article">
-    页面不存在。。。
+    文章详情
   </div>
 </template>
 

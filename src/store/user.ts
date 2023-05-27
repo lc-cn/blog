@@ -5,7 +5,7 @@ import config from '@/config'
 import {usePermissionStore} from "@/store/permission";
 import {ElMessage} from "element-plus";
 import {request} from "@/utils";
-import {LoginParam, RoleInfo, User, UserInfo} from "@/types";
+import {LoginParam, Role, User, UserInfo} from "@/types";
 export const useUserStore =defineStore('user', {
     state(){
         return {
@@ -25,7 +25,7 @@ export const useUserStore =defineStore('user', {
                 pageNum:number
                 total:number
             }
-            roles:RoleInfo[]
+            roles:Role[]
         }
     },
     actions: {
@@ -57,7 +57,7 @@ export const useUserStore =defineStore('user', {
 
         },
         getUserInfo({id}:Pick<User, 'id'>){
-          return new Promise<UserInfo&{roles:RoleInfo[]}>((resolve)=>{
+          return new Promise<UserInfo&{roles:Role[]}>((resolve)=>{
               request.get('/user/info',{id}).then(res=>{
                   if(res.code===200){
                       resolve(res.data)

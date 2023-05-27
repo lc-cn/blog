@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref,onMounted} from "vue";
+import {ref, onMounted, computed} from "vue";
 import {useRoute} from "vue-router";
 import SelectApi from '@/components/select/selectApi.vue'
 import SelectRole from '@/components/select/selectRole.vue'
@@ -36,6 +36,7 @@ const menuForm=ref<MenuForm>({
   apiIds:[],
   roleIds:[]
 })
+const id=computed(()=>Number(useRoute().query.id))
 const submit=()=>{
   request.post('/menu/bind',menuForm.value,{params:{id:menuForm.value.id}}).then(res=>{
     if(res.code===200){
@@ -45,7 +46,8 @@ const submit=()=>{
   })
 }
 onMounted(()=>{
-  useMenuStore().getMenuInfo({id:Number(useRoute().query.id)}).then(res=>{
+  if(!id.value) return
+  useMenuStore().getMenuInfo({id:id.value}).then(res=>{
     menuForm.value={
       id:res.data.id,
       name:res.data.name,

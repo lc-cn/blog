@@ -49,8 +49,8 @@ onMounted(()=>{
     roleForm.value={
       id:res.id,
       name:res.name,
-      menuIds:res.menus.map(menu=>menu.id),
-      userIds:res.users.map(user=>user.id)
+      menuIds:(res.menus||[]).map(menu=>menu.id),
+      userIds:(res.users||[]).map(user=>user.id)
     }
   })
 })

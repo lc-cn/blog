@@ -8,7 +8,7 @@
         <el-input v-model="loginForm.username"/>
       </el-form-item>
       <el-form-item label="密码" prop="password" :rules="{required:true,message:'请输入密码'}">
-        <el-input type="password" v-model="loginForm.password"/>
+        <el-input type="password" @keyup.enter="submit" v-model="loginForm.password"/>
       </el-form-item>
       <el-form-item prop="remember">
         <el-checkbox v-model="loginForm.remember">记住密码</el-checkbox>
