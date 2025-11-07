@@ -9,4 +9,5 @@ image: "https://avatars.githubusercontent.com/oa/3049435?s=240&u=99abc27b68e759c
 issueNumber: 1
 ---
 
-welcome my blog
+
+welcome my ![blog](https://blog.liucl.cn)
