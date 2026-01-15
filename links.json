@@ -7,7 +7,15 @@
       "description": "生活需要记录。",
       "avatar": "https://blog.viki.moe/avatar.png",
       "order": 0
+    },
+    {
+      "id": "1768454884835",
+      "name": "14K",
+      "url": "https://14k.cc.cd/",
+      "description": "Code for fun, run for life.",
+      "avatar": "https://14k.cc.cd/avatar.png",
+      "order": 1
     }
   ],
-  "lastModified": "2026-01-15T02:56:38.178Z"
+  "lastModified": "2026-01-15T05:28:05.316Z"
 }
