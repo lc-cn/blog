@@ -2,12 +2,12 @@
   "links": [
     {
       "id": "1768441533221",
-      "name": "Viki",
+      "name": "Viki 写东西的地方",
       "url": "https://blog.viki.moe/",
       "description": "生活需要记录。",
       "avatar": "https://blog.viki.moe/avatar.png",
-      "order": 0
+      "order": 1
     }
   ],
-  "lastModified": "2026-01-15T01:45:34.657Z"
+  "lastModified": "2026-01-15T01:52:19.645Z"
 }
