@@ -6,7 +6,7 @@ date: "2026-04-11"
 readTime: "15 min read"
 tags: ["Zhin.js", "TypeScript", "ChatBot", "AI", "开源项目", "Node.js"]
 image: ""
-issueNumber: 0
+issueNumber: 9
 ---
 
 ## 项目简介
