@@ -96,7 +96,7 @@ icqq login -q 12345 -r
 
 项目采用了优雅的分层架构：
 
-- **CLI 层**：使用 [Pastel](https://github.com/nickstefan/pastel) 实现文件系统路由，`src/commands/` 的目录结构就是命令结构，非常直观。React Ink 负责渲染终端 UI，带来类似 React 的组件化开发体验
+- **CLI 层**：使用 [Pastel](https://github.com/vadimdemedes/pastel) 实现文件系统路由，`src/commands/` 的目录结构就是命令结构，非常直观。React Ink 负责渲染终端 UI，带来类似 React 的组件化开发体验
 - **IPC 通信**：CLI 与守护进程通过 Unix Socket 通信（`~/.icqq/<uin>/daemon.sock`），首次连接需要 Token 认证，确保安全性
 - **守护进程**：登录后在后台运行，自动管理 icqq 客户端实例，支持断线重连（指数退避，最多 5 次），日志超过 5MB 自动轮转
 - **Webhook**：可选配置，守护进程可将所有消息事件 POST 到指定 URL，方便接入自动化流程
