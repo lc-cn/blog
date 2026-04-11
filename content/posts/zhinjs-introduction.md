@@ -144,9 +144,16 @@ pnpm dev
 my-bot/
 ├── plugins/          # 自定义插件目录
 │   └── hello.ts      # 示例插件
-├── zhin.yaml         # 主配置文件
+├── zhin.config.yml   # 主配置文件
 ├── package.json
 └── tsconfig.json
+```
+
+在 `zhin.config.yml` 中启用插件：
+
+```yaml
+plugins:
+  - hello
 ```
 
 ---
@@ -216,18 +223,25 @@ Zhin.js 的 AI 系统是其最具特色的功能之一。它不仅支持简单�
 
 ### 配置 AI 引擎
 
-在 `zhin.yaml` 中配置 AI 模型：
+在 `zhin.config.yml` 中配置 AI 模型：
 
 ```yaml
 ai:
-  provider: openai
-  apiKey: your-api-key
-  model: gpt-4
-  # 或使用本地 Ollama
-  # provider: ollama
-  # baseUrl: http://localhost:11434
-  # model: llama3
+  enabled: true
+  defaultProvider: ollama
+  providers:
+    ollama:
+      host: "http://localhost:11434"
+      # models 可省略 — ModelRegistry 自动发现并选择最优模型
+  agent:
+    chatModel: ''              # 留空自动选择（或指定如 qwen3:14b）
+    visionModel: ''            # 留空自动选择视觉模型
+    execSecurity: allowlist    # bash 执行策略：deny / allowlist / full
+    execPreset: network        # 预设白名单：readonly / network / development
+    execAsk: true              # 未知命令交互式审批
 ```
+
+框架内置了 **ModelRegistry**，可以自动发现可用模型并选择最优配置，大大降低了使用门槛。
 
 ### 注册 AI 工具
 
@@ -242,16 +256,9 @@ addTool({
   name: 'get_weather',
   description: '查询指定城市的天气信息',
   parameters: {
-    type: 'object',
-    properties: {
-      city: { type: 'string', description: '城市名称' }
-    },
-    required: ['city']
+    city: { type: 'string', description: '城市名称', required: true }
   },
-  async execute({ city }) {
-    const weather = await fetchWeather(city)
-    return JSON.stringify(weather)
-  }
+  execute: async ({ city }) => `${city}：晴，25°C`
 })
 ```
 
@@ -259,21 +266,75 @@ addTool({
 
 ### 文件化能力声明
 
-Zhin.js 支持通过 Markdown 文件来声明 AI 的能力，使非开发者也能定义 AI 行为：
+Zhin.js 支持通过 Markdown 文件来声明 AI 的能力，实现**零代码/轻代码**的 AI 扩展——无需编写 TypeScript，只需在约定目录放置文件，框架即可自动发现并注册。
 
 **`*.tool.md` — 工具定义文件**
 
-以 Markdown 格式描述工具的名称、参数和用途，框架会自动解析并注册。
+```markdown
+---
+name: greeting
+description: 向用户问好
+parameters:
+  name:
+    type: string
+    description: 用户名称
+    required: true
+---
+你好，{{name}}！欢迎使用 Zhin.js 🎉
+```
+
+body 中的 `{{param}}` 会被参数值替换后直接作为返回。若需要更复杂的逻辑，可以在 frontmatter 中添加 `handler: ./handler.ts` 指向处理函数。
 
 **`SKILL.md` — 技能描述文件**
 
-定义 AI 智能体的技能清单，描述它擅长什么、如何回应用户。
+```markdown
+---
+name: code-review
+description: 代码审查助手
+keywords: [review, lint, best-practice]
+tags: [dev]
+tools: [read_file, grep_search]
+always: false
+---
+你是一个代码审查专家，请对用户提供的代码进行审查……
+```
 
 **`*.agent.md` — 智能体配置文件**
 
-用 Markdown 编排完整的智能体，包括人设（System Prompt）、可用工具列表、对话策略等。
+```markdown
+---
+name: translator
+description: 多语翻译助手
+model: gpt-4o
+maxIterations: 5
+tools: [web_search]
+---
+你是一名专业翻译，精通中英日三语互译……
+```
+
+框架按 **`cwd/` → `~/.zhin/` → `data/` → 已加载插件包根** 的顺序扫描 `tools/`、`skills/`、`agents/` 目录，同名先发现者优先；工作区内的文件变更支持**热重载**。
 
 这种文件化的方式让 AI 的行为可审计、可版本控制，也更便于团队协作。
+
+### AI 引擎架构概览
+
+```
+@zhin.js/ai（通用引擎，与 IM 无关）
+├── Provider    — LLM 统一接口（OpenAI / Ollama / Anthropic / DeepSeek …）
+├── Agent       — 多轮 tool-calling 循环
+├── Memory      — 短期滑动窗口 + 长期链式摘要
+├── CostTracker — Token 用量与成本追踪
+└── FileStateCache / MicroCompact / ToolSearchCache — 性能优化层
+
+@zhin.js/agent（IM 编排）
+├── ExecPolicy    — 6 层 bash 安全
+├── FilePolicy    — 文件访问策略与设备路径拦截
+├── PromptBuilder — 10 段结构化系统提示词
+├── 内置工具      — bash / read_file / ask_user / web_search …
+└── 子任务 / 用户画像 / 定时跟进 / 引导文件
+```
+
+整个 AI 系统分为两层：**通用 AI 引擎**（`@zhin.js/ai`）处理与大语言模型的通信，**IM 编排引擎**（`@zhin.js/agent`）则负责在聊天场景中协调 AI 的行为。这种分层设计使得 AI 引擎可以独立复用，不局限于聊天机器人场景。
 
 ---
 
@@ -416,51 +477,55 @@ Web 控制台的前端应用，基于现代前端技术栈构建，提供可视�
 
 ## 安全模型：6 层纵深防御
 
-Zhin.js 在 AI 安全方面做了深入的设计，尤其是针对 AI 执行 Bash 命令的场景，建立了 **6 层纵深防御**体系：
+Zhin.js 在 AI 安全方面做了深入的设计（参考 Claude Code 安全架构），尤其是针对 AI 执行 Bash 命令的场景，建立了 **6 层纵深防御**体系：
 
-### 第 1 层：输入校验（Input Validation）
+| 层级 | 防御机制 | 说明 |
+|------|----------|------|
+| 第 1 层 | 危险命令黑名单 | `sudo`、`eval`、`dd` 等危险命令即使在 `full` 模式下也会被直接拦截 |
+| 第 2 层 | 环境变量前缀剥离 | 识别并剥离环境变量前缀，如 `FOO=bar rm` 会被正确识别为 `rm` 命令 |
+| 第 3 层 | 安全包装器剥离 | 识别并剥离 safe wrapper，如 `timeout 10 rm` 会被正确识别为 `rm` |
+| 第 4 层 | 复合命令拆分检查 | 拆分复合命令逐段检查，如 `ls && rm -rf /` 会分别检查 `ls` 和 `rm` |
+| 第 5 层 | 只读命令自动放行 | `cat`、`grep`、`ls` 等只读命令无需白名单即可执行 |
+| 第 6 层 | 交互式审批 | 开启 `execAsk: true` 后，未知命令会通过 `ask_user` 向用户确认后再执行 |
 
-在命令执行前，对 AI 生成的命令进行严格的输入校验：
-- 命令白名单检查
-- 危险字符过滤
-- 命令长度限制
+此外，Zhin.js 还在文件访问层面提供了**文件访问策略**和**设备路径拦截**，从多个维度保障系统安全。
 
-### 第 2 层：沙箱隔离（Sandbox Isolation）
+### 安全配置示例
 
-命令在受限的沙箱环境中执行：
-- 文件系统访问限制
-- 网络访问控制
-- 进程权限约束
-
-### 第 3 层：权限控制（Permission Control）
-
-基于角色的权限管理：
-- 用户权限分级（普通用户/管理员/超级管理员）
-- 命令级别的权限配置
-- 平台级别的权限隔离
-
-### 第 4 层：执行监控（Execution Monitoring）
-
-命令执行过程的实时监控：
-- 执行超时控制
-- 资源使用限制（CPU/内存）
-- 异常行为检测
-
-### 第 5 层：输出审计（Output Auditing）
-
-命令输出的安全审计：
-- 敏感信息脱敏
-- 输出内容长度限制
-- 日志记录与追踪
-
-### 第 6 层：回滚恢复（Rollback & Recovery）
-
-异常情况下的自动恢复：
-- 操作回滚机制
-- 状态快照与恢复
-- 告警通知
+```yaml
+ai:
+  agent:
+    execSecurity: allowlist    # 执行策略：deny / allowlist / full
+    execPreset: network        # 预设白名单：readonly / network / development
+    execAsk: true              # 未知命令交互式审批
+```
 
 这 6 层防御层层递进，形成了完整的安全闭环，确保即使 AI 被恶意利用，也无法对系统造成实质性损害。
+
+---
+
+## 常用命令速查
+
+Zhin.js 提供了丰富的 CLI 工具来简化日常操作：
+
+```bash
+# 运行
+pnpm dev                      # 开发模式（热重载）
+pnpm start                    # 生产模式
+pnpm start -- -d              # 后台守护进程
+npx zhin stop                 # 停止后台进程
+
+# 插件管理
+npx zhin new <name>           # 创建插件模板
+npx zhin build                # 构建插件
+npx zhin pub                  # 发布插件到 npm
+npx zhin search <keyword>     # 搜索 npm 上的 Zhin 插件
+npx zhin install <name>       # 安装插件
+
+# 诊断
+npx zhin doctor               # 检查环境和配置
+npx zhin setup                # 交互式配置向导
+```
 
 ---
 
@@ -499,5 +564,5 @@ Zhin.js 仍在积极开发中，未来的方向包括：
 **相关链接：**
 
 - 📦 GitHub 仓库：[zhinjs/zhin](https://github.com/zhinjs/zhin)
-- 📖 项目文档：查看仓库 README 获取最新信息
+- 📖 官方文档：[zhin.js.org](https://zhin.js.org)
 - 💬 许可证：[MIT License](https://github.com/zhinjs/zhin/blob/main/LICENSE)
