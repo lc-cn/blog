@@ -6,7 +6,7 @@ date: "2026-04-11"
 readTime: "10 min read"
 tags: ["QQ", "CLI", "typescript", "React Ink", "开源项目"]
 image: ""
-issueNumber: 0
+issueNumber: 7
 ---
 
 ## 项目简介
