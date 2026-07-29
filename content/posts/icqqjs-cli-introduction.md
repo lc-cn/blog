@@ -3,11 +3,12 @@ title: "@icqqjs/cli：在终端里玩转 QQ 的命令行客户端"
 excerpt: "一个基于 icqq 协议的命令行 QQ 客户端，使用 React Ink 构建交互式终端 UI，支持消息收发、群管理、频道操作等丰富功能"
 author: "凉菜"
 date: "2026-04-11"
-readTime: "10 min read"
+readTime: "5 min read"
 tags: ["QQ", "CLI", "typescript", "React Ink", "开源项目"]
 image: ""
 issueNumber: 7
 ---
+
 
 ## 项目简介
 
