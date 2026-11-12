@@ -1,0 +1,45 @@
+{
+  "categories": [
+    {
+      "id": "ai-agent",
+      "name": "AI 与 Agent",
+      "slug": "ai-agent",
+      "icon": "🤖",
+      "color": "bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-200 dark:border-violet-800",
+      "description": "大模型应用、Agent 工具链与上下文工程",
+      "order": 1,
+      "children": []
+    },
+    {
+      "id": "bot-im",
+      "name": "机器人与即时通讯",
+      "slug": "bot-im",
+      "icon": "💬",
+      "color": "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+      "description": "聊天机器人框架、IM 协议与消息处理",
+      "order": 2,
+      "children": []
+    },
+    {
+      "id": "tools-infra",
+      "name": "工具与基础设施",
+      "slug": "tools-infra",
+      "icon": "🛠️",
+      "color": "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800",
+      "description": "开发工具、部署与云服务",
+      "order": 3,
+      "children": []
+    },
+    {
+      "id": "notes",
+      "name": "随笔",
+      "slug": "notes",
+      "icon": "📝",
+      "color": "bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-800",
+      "description": "杂谈与随手记录",
+      "order": 4,
+      "children": []
+    }
+  ],
+  "lastModified": "2026-11-12T02:30:00.000Z"
+}

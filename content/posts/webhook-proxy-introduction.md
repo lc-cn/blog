@@ -5,6 +5,7 @@ author: "凉菜"
 date: "2025-11-08"
 readTime: "8 min read"
 tags: ["webhook", "cloudflare", "typescript", "开源项目"]
+category: "tools-infra"
 image: ""
 issueNumber: 4
 ---

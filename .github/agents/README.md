@@ -32,6 +32,7 @@ author: "凉菜"
 date: "YYYY-MM-DD"
 readTime: "X min read"
 tags: ["tag1", "tag2"]
+category: "category slug (see categories.json)"
 image: ""
 issueNumber: N
 ---

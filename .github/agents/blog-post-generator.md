@@ -21,6 +21,7 @@ You are a specialized blog post generator for this repository. Your primary resp
   date: "YYYY-MM-DD"
   readTime: "X min read"
   tags: ["tag1", "tag2", "tag3"]
+  category: "category-slug"
   image: ""
   issueNumber: N
   ---
@@ -32,7 +33,8 @@ You are a specialized blog post generator for this repository. Your primary resp
   - **author**: The author name, default to "凉菜" unless specified otherwise
   - **date**: Publication date in YYYY-MM-DD format (use current date if not specified)
   - **readTime**: Estimated reading time (e.g., "5 min read", "10 min read")
-  - **tags**: Array of relevant tags/categories for the article
+  - **tags**: Array of relevant tags for the article
+  - **category**: Slug of exactly one category defined in `categories.json` at the repository root (e.g. `ai-agent`, `bot-im`, `tools-infra`, `notes`). The site's category tree comes from that file, and a post belongs to a category only when this value equals the category's `slug`; posts without it are listed as uncategorized. If no existing category fits, add one to `categories.json` (same fields as the existing entries) instead of inventing a slug
   - **image**: Featured image URL (can be empty string if no image)
   - **issueNumber**: GitHub issue number for comments (automatically created and assigned)
 
