@@ -5,6 +5,7 @@ author: "凉菜"
 date: "2026-11-12"
 readTime: "10 min read"
 tags: ["AI", "Agent", "MCP", "Claude Code", "Codex", "对象存储", "开源项目"]
+category: "ai-agent"
 image: ""
 issueNumber: 10
 ---

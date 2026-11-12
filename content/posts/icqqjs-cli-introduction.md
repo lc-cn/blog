@@ -5,6 +5,7 @@ author: "凉菜"
 date: "2026-04-11"
 readTime: "5 min read"
 tags: ["QQ", "CLI", "typescript", "React Ink", "开源项目"]
+category: "bot-im"
 image: ""
 issueNumber: 7
 ---

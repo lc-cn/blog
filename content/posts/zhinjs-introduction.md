@@ -5,6 +5,7 @@ author: "凉菜"
 date: "2026-04-11"
 readTime: "15 min read"
 tags: ["Zhin.js", "TypeScript", "ChatBot", "AI", "开源项目", "Node.js"]
+category: "bot-im"
 image: ""
 issueNumber: 9
 ---

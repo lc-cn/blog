@@ -5,6 +5,7 @@ author: "凉菜"
 date: "2025-11-08"
 readTime: "8 min read"
 tags: ["typescript", "npm", "开源项目", "消息处理"]
+category: "bot-im"
 image: ""
 issueNumber: 5
 ---
